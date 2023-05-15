@@ -1,0 +1,47 @@
+import datetime
+
+push_ups_today = 0
+push_ups_total = 0
+days_count = 0
+previous_push_ups = 0
+total_increase = 0
+
+def update_statistics():
+    global days_count, previous_push_ups, total_increase
+    
+    days_count += 1
+    average_push_ups = push_ups_total / days_count
+    
+    if days_count == 1:
+        average_increase = 0
+    else:
+        average_increase = total_increase / (days_count - 1)
+    
+    print(f"Continuous days with push-ups: {days_count}")
+    print(f"Average push-ups per day: {average_push_ups:.2f}")
+    print(f"Average increase/decrease so far: {average_increase:.2f}")
+
+while True:
+    user_input = input("Enter the number of push-ups done today (or 'trend' for statistics): ")
+    if user_input.lower() == "trend":
+        update_statistics()
+    else:
+        try:
+            push_ups = int(user_input)
+            current_date = datetime.datetime.now() + datetime.timedelta(hours=2)  # GMT + 2: Finnish time
+            
+            if current_date.hour == 0 and current_date.minute == 0:  # Reset counts at midnight
+                push_ups_today = 0
+                days_count = 0
+                previous_push_ups = 0
+                total_increase = 0
+            
+            push_ups_today += push_ups
+            push_ups_total += push_ups
+            increase = push_ups_today - previous_push_ups
+            previous_push_ups = push_ups_today
+            total_increase += increase
+            
+            print(f"Push-ups today: {push_ups_today}")
+        except ValueError:
+            print("Invalid input. Please enter a number or 'trend' for statistics.")
